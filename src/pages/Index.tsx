@@ -1,12 +1,38 @@
-/* Home Page - Replace this page layout, components, content, behavior with what you want and translate to the language of the user */
-const Index = () => {
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/hooks/use-auth'
+import { OSProvider } from '@/hooks/use-os'
+import { Wallpaper } from '@/components/desktop/Wallpaper'
+import { TopStatusBar } from '@/components/desktop/TopStatusBar'
+import { Dock } from '@/components/desktop/Dock'
+import { DesktopIcons } from '@/components/desktop/DesktopIcons'
+import { WidgetsPanel } from '@/components/desktop/WidgetsPanel'
+import { NotificationCenter } from '@/components/desktop/NotificationCenter'
+import { WindowManager } from '@/components/desktop/WindowManager'
+
+export default function IndexPage() {
+  const { isAuthenticated, loading } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated, loading, navigate])
+
+  if (loading || !isAuthenticated) return null
+
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">
-        This is a example page ready to be rewritten with your own content
-      </h1>
-    </div>
+    <OSProvider>
+      <div className="relative w-screen h-screen overflow-hidden select-none font-sans">
+        <Wallpaper />
+        <TopStatusBar />
+        <DesktopIcons />
+        <WidgetsPanel />
+        <WindowManager />
+        <NotificationCenter />
+        <Dock />
+      </div>
+    </OSProvider>
   )
 }
-
-export default Index
